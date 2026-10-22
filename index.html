@@ -37,7 +37,7 @@ html[lang="ar"] {
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   margin: 0; background: var(--creme); color: var(--prune);
-  font: 400 1rem/1.6 var(--f-body); overflow-x: hidden;
+  font: 400 1rem/1.6 var(--f-body); overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); background: var(--rose); z-index: 40; }
@@ -99,27 +99,69 @@ html[dir="rtl"] .btn:hover .arr { transform: scaleX(-1) translateX(4px); }
 .lang button[aria-pressed="true"] { background: var(--prune); color: var(--creme); border-color: var(--prune); }
 .lang button[lang="ar"] { font-family: "Cairo", var(--f-body); font-size: .95rem; letter-spacing: 0; }
 
-/* hero */
-.hero { background: var(--rose); padding-block: clamp(2rem, 6vw, 4.5rem) clamp(3.5rem, 8vw, 6rem); }
-.hero-grid { display: grid; gap: 2.5rem; align-items: center; }
-@media (min-width: 900px) { .hero-grid { grid-template-columns: 1.05fr .95fr; gap: 3rem; } }
-.hero h1 { font-size: clamp(3.1rem, 12.5vw, 5.6rem); margin-top: 1.4rem; }
-.hero .sub { font-weight: 600; font-size: clamp(1.1rem, 1.5vw + .8rem, 1.45rem); line-height: 1.3; margin-top: 1.6rem; }
-.hero .body { margin-top: 1rem; max-width: 36ch; font-size: 1.05rem; }
-.hero .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem 1.8rem; margin-top: 2rem; }
-.hero .lede { margin-top: 2.4rem; padding-top: 1.2rem; border-top: 1px solid rgba(68,38,61,.35); max-width: 46ch; font-size: .95rem; }
-.halo-art { position: relative; width: 100%; max-width: 640px; margin-inline: auto; }
-.halo { width: 100%; height: auto; aspect-ratio: 600 / 440; overflow: visible; }
-.par { transform: translate(calc(var(--mx, 0) * var(--k) * 1px), calc(var(--my, 0) * var(--k) * 1px)); transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+/* shared halo + heart */
 .ring { fill: none; stroke: var(--nacre); stroke-width: 1.3; transform-box: fill-box; transform-origin: center; animation: breathe var(--t, 14s) ease-in-out infinite alternate; }
-.hero .halo .ring { stroke: var(--nacre); }
 @keyframes breathe { from { transform: rotate(var(--r0, -3deg)) scale(1); } to { transform: rotate(var(--r1, 3deg)) scale(1.035); } }
 .heart-btn { position: absolute; left: 50%; top: 47%; width: 22%; aspect-ratio: 1 / .92; transform: translate(-50%, -50%); background: none; border: 0; padding: 0; color: var(--nacre); }
 .heart-btn .heart { width: 100%; height: 100%; fill: currentColor; animation: beat 3.6s ease-in-out infinite; }
 @keyframes beat { 0%, 100% { transform: scale(1); } 8% { transform: scale(1.09); } 16% { transform: scale(1); } 24% { transform: scale(1.06); } 34% { transform: scale(1); } }
 .heart-btn:active .heart { transform: scale(.92); }
 .pop { position: absolute; width: 18px; height: 16px; pointer-events: none; fill: var(--nacre); }
-.halo-cap { margin-top: 1rem; text-align: center; font-size: .72rem; }
+
+/* hero: pinned scroll scene. The box opens as you scroll; its contents orbit the halo. */
+.hero { --headh: 68px; --pinh: max(560px, calc(100vh - var(--headh) - env(safe-area-inset-top, 0px))); position: relative; height: calc(var(--pinh) + 210vh); background: var(--rose); }
+@supports (height: 100svh) { .hero { --pinh: max(560px, calc(100svh - var(--headh) - env(safe-area-inset-top, 0px))); height: calc(var(--pinh) + 210svh); } }
+.pin { position: sticky; top: calc(var(--headh) + env(safe-area-inset-top, 0px)); height: var(--pinh); overflow: hidden; isolation: isolate; background: var(--rose); }
+.anc { position: absolute; left: 50%; top: 69%; width: 0; height: 0; --sp: clamp(78px, 20vw, 136px); }
+@media (min-width: 900px) { .anc { left: 71%; top: 53%; } html[dir="rtl"] .anc { left: 29%; } }
+.glow { position: absolute; left: 0; top: 0; width: min(130vw, 1000px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgba(255,236,240,.9), rgba(255,236,240,0)); transform: translate(-50%, -50%) scale(.6); opacity: .3; z-index: 0; pointer-events: none; }
+.rings3 { position: absolute; left: 0; top: 0; width: min(170vw, 1500px); transform: translate(-50%, -50%); z-index: 1; pointer-events: none; }
+.rings3 svg { width: 100%; height: auto; overflow: visible; }
+.rings3 .ring { stroke: var(--nacre); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.boxwrap { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 5; font-size: clamp(10px, 3.1vw, 20px); perspective: 75em; direction: ltr; }
+.hscene { left: 0; top: 0; transition: none; }
+.hscene .hinge, .hscene .cardx { transition: none; }
+.boxhit { position: absolute; left: -12em; top: -12em; width: 24em; height: 22em; background: none; border: 0; padding: 0; z-index: 5; -webkit-tap-highlight-color: transparent; }
+.mote { position: absolute; left: 0; top: 0; width: 16px; height: 15px; fill: var(--nacre); opacity: 0; z-index: 3; pointer-events: none; }
+.mote:nth-of-type(3n) { fill: var(--prune); }
+.spr { position: absolute; left: 0; top: 0; width: var(--sp); transform: translate(-50%, -50%) scale(0); border: 0; padding: 0; color: var(--prune); font: 400 calc(var(--sp) * .2)/1.1 var(--f-body); display: grid; place-items: center; pointer-events: none; will-change: transform; text-align: center; }
+.spr.card { aspect-ratio: 4 / 5; background: var(--prune); color: var(--nacre); padding: 12%; place-items: start; text-align: start; font-size: calc(var(--sp) * .22); box-shadow: 0 14px 24px -14px rgba(68,38,61,.7); }
+.spr.card b { display: block; font: 300 1em/1 var(--f-display); }
+.spr.card em { color: var(--rose); }
+.spr.card svg { position: absolute; right: 12%; bottom: 10%; width: 22%; height: auto; fill: var(--rose); }
+.spr.note { aspect-ratio: 4 / 5.3; background: var(--creme); padding: 10%; align-content: space-between; justify-items: center; box-shadow: 0 14px 24px -14px rgba(68,38,61,.6); font-size: calc(var(--sp) * .19); }
+.spr.note svg { width: 72%; height: auto; }
+.spr.note .ring { stroke: var(--prune); stroke-width: 1; vector-effect: non-scaling-stroke; animation: none; }
+.spr.note b { display: block; justify-self: start; font: 300 1em/1.05 var(--f-display); text-align: start; }
+.spr.dot { aspect-ratio: 1; border-radius: 50%; font: italic 300 calc(var(--sp) * .24)/1.05 var(--f-display); padding: 8%; }
+html[lang="ar"] .spr.dot { font-style: normal; font-weight: 700; font-size: calc(var(--sp) * .2); }
+.spr.dot svg { width: 44%; height: auto; fill: currentColor; }
+.spr.d1 { background: var(--beurre); } .spr.d2 { background: var(--lilas); } .spr.d3 { background: var(--prune); color: var(--rose); } .spr.d4 { background: var(--sauge); color: var(--prune); }
+.spr.hrt { width: calc(var(--sp) * .42); aspect-ratio: 1 / .92; background: none; color: var(--nacre); }
+.spr.hrt.p { color: var(--prune); }
+.spr.hrt svg { width: 100%; height: auto; fill: currentColor; }
+html[dir="rtl"] .spr.card em, html[dir="rtl"] .spr.note em { font-style: normal; }
+.t1, .t2 { position: absolute; top: 0; bottom: 0; inset-inline-start: var(--gut); width: calc(100% - var(--gut) - var(--gut-r)); display: flex; flex-direction: column; justify-content: flex-start; padding-top: clamp(1rem, 3.2vh, 2.2rem); z-index: 8; will-change: transform, opacity; }
+@media (min-width: 900px) { .t1, .t2 { justify-content: center; padding-top: 0; width: min(46%, 540px); } }
+.txtwrap { position: absolute; inset: 0; max-width: 1180px; margin-inline: auto; width: 100%; pointer-events: none; }
+.txtwrap > * { pointer-events: auto; }
+.t1 h1 { font-size: clamp(2.9rem, 12.2vw, 5.4rem); margin-top: 1.1rem; }
+.t1 .sub { font-weight: 600; font-size: clamp(1.05rem, 1.4vw + .8rem, 1.4rem); line-height: 1.3; margin-top: 1.3rem; max-width: 26ch; }
+.t1 .actions, .t2 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.8rem; margin-top: 1.6rem; }
+.t1 .actions .link { display: none; }
+@media (min-width: 600px) { .t1 .actions .link { display: inline; } }
+.t2 h2 { font-size: clamp(2.8rem, 11vw, 5.2rem); }
+.t2 .lines { margin-top: 1.2rem; display: grid; gap: .2rem; font-size: 1.05rem; }
+.js-hero .t2 { visibility: hidden; opacity: 0; }
+.scrollhint { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 8; display: grid; justify-items: center; gap: .5rem; text-align: center; white-space: nowrap; pointer-events: none; }
+.scrollhint i { width: 1px; height: 34px; background: var(--prune); transform-origin: top; animation: drip 1.9s ease-in-out infinite; }
+@keyframes drip { 0% { transform: scaleY(0); opacity: 1; } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+.hero-after { background: var(--rose); padding-block: clamp(1.5rem, 5vw, 3rem) clamp(3.5rem, 8vw, 5.5rem); }
+.hero-after .wrap { display: grid; gap: 1.6rem; }
+@media (min-width: 860px) { .hero-after .wrap { grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; } }
+.hero-after .big { font-size: clamp(1.15rem, 1.6vw + .8rem, 1.55rem); line-height: 1.45; max-width: 30ch; }
+.hero-after .small { padding-top: 1rem; border-top: 1px solid rgba(68,38,61,.35); max-width: 46ch; }
+@media (prefers-reduced-motion: reduce) { .hero { height: var(--pinh); } .scrollhint { display: none; } }
 
 /* marquee */
 .marquee { background: var(--beurre); color: var(--prune); overflow: hidden; direction: ltr; border-block: 1px solid rgba(68,38,61,.18); }
@@ -331,30 +373,69 @@ img{max-width:100%}
 </header>
 
 <main id="top">
-  <section class="hero band" style="padding-block:clamp(2rem,6vw,4.5rem) clamp(3.5rem,8vw,6rem)">
-    <div class="wrap hero-grid">
-      <div>
-        <p class="eyebrow" data-i="h_eb">Grandir en douceur</p>
-        <h1 class="display" data-i="h_h1">Tout commence <em>par une question.</em></h1>
-        <p class="sub" data-i="h_sub">Et toutes tes questions ont leur place.</p>
-        <p class="body" data-i="h_body">Ton corps change.</p>
-        <div class="actions">
-          <a class="btn" href="#box"><span data-i="cta">Découvrir la box</span><svg class="arr" aria-hidden="true"><use href="#s-arr"/></svg></a>
-          <a class="link" href="#essence" data-i="cta2">Découvrir l’univers Aura</a>
+  <section class="hero" id="hero">
+    <div class="pin" id="pin">
+      <div class="anc">
+        <div class="glow" id="glow"></div>
+        <div class="rings3" id="rings3" aria-hidden="true">
+          <svg viewBox="0 0 1000 640">
+            <ellipse class="ring" cx="500" cy="320" rx="490" ry="300" style="--r0:-1deg;--r1:1.5deg;--t:16s"/>
+            <ellipse class="ring" cx="500" cy="320" rx="456" ry="280" style="--r0:1.5deg;--r1:-1deg;--t:13s"/>
+            <ellipse class="ring" cx="500" cy="320" rx="422" ry="260" style="--r0:-1.2deg;--r1:1.2deg;--t:18s"/>
+            <ellipse class="ring" cx="500" cy="320" rx="388" ry="240" style="--r0:1.2deg;--r1:-1.5deg;--t:15s"/>
+            <ellipse class="ring" cx="500" cy="320" rx="354" ry="220" style="--r0:-1deg;--r1:1deg;--t:17s"/>
+          </svg>
         </div>
-        <p class="lede" data-i="h_lede">La première box au Maroc.</p>
+        <svg class="mote" viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg>
+        <svg class="mote" viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg>
+        <svg class="mote" viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg>
+        <svg class="mote" viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg>
+        <svg class="mote" viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg>
+        <svg class="mote" viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg>
+        <svg class="mote" viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg>
+        <div class="boxwrap" id="boxWrap">
+          <span class="scene hscene" id="hScene"></span>
+          <button type="button" class="boxhit" id="boxHit" data-al="b_aria" aria-label="Ouvrir la box"></button>
+        </div>
+        <button type="button" class="spr card" data-sp="0"><b data-i="a_c_h">Tu as <em>le temps.</em></b><svg viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg></button>
+        <button type="button" class="spr note" data-sp="1">
+          <svg viewBox="0 0 200 150" aria-hidden="true"><ellipse class="ring" cx="100" cy="75" rx="94" ry="70"/><ellipse class="ring" cx="100" cy="75" rx="80" ry="60"/><ellipse class="ring" cx="100" cy="75" rx="66" ry="50"/></svg>
+          <b data-i="a_n_h">Mes mots, <em>mes questions.</em></b>
+        </button>
+        <button type="button" class="spr dot d1" data-sp="2"><span data-i="mq2">tout doux</span></button>
+        <button type="button" class="spr dot d2" data-sp="3"><span data-i="mq3">pour toi</span></button>
+        <button type="button" class="spr dot d3" data-sp="4"><svg viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg></button>
+        <button type="button" class="spr dot d4" data-sp="5"><svg viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg></button>
+        <button type="button" class="spr hrt" data-sp="6" aria-hidden="true" tabindex="-1"><svg viewBox="0 0 100 92"><use href="#s-heart"/></svg></button>
+        <button type="button" class="spr hrt p" data-sp="7" aria-hidden="true" tabindex="-1"><svg viewBox="0 0 100 92"><use href="#s-heart"/></svg></button>
+        <button type="button" class="spr hrt" data-sp="8" aria-hidden="true" tabindex="-1"><svg viewBox="0 0 100 92"><use href="#s-heart"/></svg></button>
       </div>
-      <div class="halo-art" id="haloArt">
-        <svg class="halo" viewBox="0 0 600 440" aria-hidden="true">
-          <g class="par" style="--k:-4"><ellipse class="ring" cx="300" cy="220" rx="292" ry="200" style="--r0:-2deg;--r1:2.5deg;--t:15s"/></g>
-          <g class="par" style="--k:-2"><ellipse class="ring" cx="300" cy="220" rx="272" ry="186" style="--r0:2deg;--r1:-2deg;--t:12s"/></g>
-          <g class="par" style="--k:0"><ellipse class="ring" cx="300" cy="220" rx="252" ry="172" style="--r0:-3deg;--r1:2deg;--t:17s"/></g>
-          <g class="par" style="--k:3"><ellipse class="ring" cx="300" cy="220" rx="232" ry="158" style="--r0:2.5deg;--r1:-3deg;--t:13s"/></g>
-          <g class="par" style="--k:6"><ellipse class="ring" cx="300" cy="220" rx="212" ry="144" style="--r0:-2deg;--r1:3.5deg;--t:16s"/></g>
-        </svg>
-        <button type="button" class="heart-btn" data-heart data-al="al_heart" aria-label="Un cœur"><svg class="heart" aria-hidden="true" viewBox="0 0 100 92"><use href="#s-heart"/></svg></button>
-        <p class="eyebrow halo-cap" data-i="h_cap">Une présence douce. Une énergie nouvelle.</p>
+      <div class="txtwrap">
+        <div class="t1" id="t1">
+          <p class="eyebrow" data-i="h_eb">Grandir en douceur</p>
+          <h1 class="display" data-i="h_h1">Tout commence <em>par une question.</em></h1>
+          <p class="sub" data-i="h_sub">Et toutes tes questions ont leur place.</p>
+          <div class="actions">
+            <a class="btn" href="#box"><span data-i="cta">Découvrir la box</span><svg class="arr" aria-hidden="true"><use href="#s-arr"/></svg></a>
+            <a class="link" href="#essence" data-i="cta2">Découvrir l’univers Aura</a>
+          </div>
+        </div>
+        <div class="t2" id="t2">
+          <h2 class="display" data-i="b_h">Une attention <em>à ouvrir.</em></h2>
+          <div class="lines"><p data-i="b_l1">Le rose à l’extérieur.</p><p data-i="b_l2">Une respiration crème à l’intérieur.</p><p data-i="b_l3">Un message qui accueille.</p></div>
+          <div class="actions">
+            <a class="btn" href="#box"><span data-i="cta">Découvrir la box</span><svg class="arr" aria-hidden="true"><use href="#s-arr"/></svg></a>
+            <a class="link" href="#essence" data-i="cta2">Découvrir l’univers Aura</a>
+          </div>
+        </div>
       </div>
+      <p class="scrollhint eyebrow" id="hint3"><span data-i="hx_scroll">Fais défiler pour ouvrir la box</span><i></i></p>
+    </div>
+  </section>
+  <section class="hero-after">
+    <div class="wrap">
+      <p class="big" data-i="h_body">Ton corps change.</p>
+      <p class="small" data-i="h_lede">La première box au Maroc.</p>
     </div>
   </section>
 
@@ -466,7 +547,7 @@ img{max-width:100%}
           <span class="f b-right"></span>
           <span class="f in-right"></span>
           <span class="f in-floor"></span>
-          <span class="f cardx" id="cardx"><b data-i="b_c1">À ton rythme.</b><span data-i="b_c2">Bienvenue dans ton histoire.</span><svg viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg></span>
+          <span class="f cardx"><b data-i="b_c1">À ton rythme.</b><span data-i="b_c2">Bienvenue dans ton histoire.</span><svg viewBox="0 0 100 92" aria-hidden="true"><use href="#s-heart"/></svg></span>
           <span class="f b-front"><svg class="logo" viewBox="0 0 2424 1064" aria-hidden="true"><use href="#s-lock"/></svg></span>
           <span class="hinge">
             <span class="lid">
@@ -557,6 +638,7 @@ img{max-width:100%}
     fr: {
       nav_ess: "L’essence", nav_voix: "La voix", nav_box: "La box",
       cta: "Découvrir la box", cta2: "Découvrir l’univers Aura",
+      hx_scroll: "Fais défiler pour ouvrir la box",
       h_eb: "Grandir en douceur",
       h_h1: "Tout commence <em>par une question.</em>",
       h_sub: "Et toutes tes questions ont leur place.",
@@ -597,6 +679,7 @@ img{max-width:100%}
     en: {
       nav_ess: "Essence", nav_voix: "Our voice", nav_box: "The box",
       cta: "Discover the box", cta2: "Explore the Aura world",
+      hx_scroll: "Scroll to open the box",
       h_eb: "Growing up, gently",
       h_h1: "Everything starts <em>with a question.</em>",
       h_sub: "And every question of yours has its place.",
@@ -637,6 +720,7 @@ img{max-width:100%}
     ar: {
       nav_ess: "الجوهر", nav_voix: "صوتنا", nav_box: "الصندوق",
       cta: "اكتشفي الصندوق", cta2: "اكتشفي عالم أورا",
+      hx_scroll: "مرّري لفتح الصندوق",
       h_eb: "أن نكبر بلطف",
       h_h1: "كلّ شيء يبدأ <em>بسؤال.</em>",
       h_sub: "وكلّ أسئلتكِ لها مكانها.",
@@ -832,6 +916,88 @@ img{max-width:100%}
       var el = $(p[1]); el.setAttribute("data-w", p[0]); io2.observe(el);
     });
   } else { $$(".rise").forEach(function (el) { el.classList.add("in"); }); }
+
+
+  /* hero scene: scroll drives lid, card, orbit and halo */
+  (function () {
+    var hero = $("#hero"), pin = $("#pin"), head = $(".head"), hs = $("#hScene");
+    hs.innerHTML = $("#scene").innerHTML;
+    var hinge = $(".hinge", hs), cardx = $(".cardx", hs), glow = $("#glow"), rings = $("#rings3");
+    var bw = $("#boxWrap"), t1 = $("#t1"), t2 = $("#t2"), hint = $("#hint3");
+    var sprites = $$(".spr", hero), motes = $$(".mote", hero);
+    var cfg = [
+      [200, 1.00, 1.00, 1.00, -10], [335, 1.05, .95, 1.00, 8], [22, .82, 1.12, .88, -6], [152, .86, 1.05, .84, 7],
+      [268, .55, 1.25, .62, 0], [92, 1.18, .72, .72, 0], [238, 1.32, .86, .9, 12], [58, 1.25, .92, .85, -12], [312, .45, 1.2, .8, 8]
+    ];
+    var W, H, em, R, range, desk, P = 0, tgt = 0, last = 0, raf = 0, active = false, pxT = 0, px = 0;
+    function clamp(x, a, b) { return Math.max(a || 0, Math.min(b == null ? 1 : b, x)); }
+    function ease(x) { return 1 - Math.pow(1 - x, 3); }
+    function size() {
+      W = pin.clientWidth; H = pin.clientHeight; desk = W >= 900;
+      em = parseFloat(getComputedStyle(bw).fontSize) || 14;
+      R = { x: W * (desk ? .25 : .4), y: H * (desk ? .3 : .16) };
+      range = Math.max(1, hero.offsetHeight - H);
+    }
+    function paint(p, t) {
+      var lid = ease(clamp((p - .06) / .3)), card = ease(clamp((p - .2) / .3)), u = ease(clamp((p - .14) / .36));
+      var ry = 30 + p * 16 + px * 12, rx = -22 + p * 8;
+      hs.style.transform = "rotateX(" + rx + "deg) rotateY(" + ry + "deg)";
+      hinge.style.transform = "translate3d(0,-3.75em,-6.7em) rotateX(" + (lid * 118) + "deg)";
+      cardx.style.transform = "translate3d(0," + (1.2 - card * 7.8) + "em," + card + "em) rotateY(" + (-ry) + "deg) rotateX(" + (-rx) + "deg)";
+      bw.style.transform = "scale(" + (1 + p * .1) + ")";
+      rings.style.transform = "translate(-50%,-50%) scale(" + (1 + p * .55) + ") rotate(" + (p * 14) + "deg)";
+      glow.style.transform = "translate(-50%,-50%) scale(" + (.6 + lid * .9) + ")";
+      glow.style.opacity = .28 + lid * .55;
+      var spin = p * 3.2 + t * .12;
+      sprites.forEach(function (el, i) {
+        var c = cfg[i], th = c[0] * Math.PI / 180 + spin;
+        var rxx = R.x * c[1] * u, ryy = R.y * c[2] * u;
+        var x = rxx * Math.cos(th);
+        var y = ryy * Math.sin(th) - Math.sin(Math.PI * u) * R.y * .55 - (1 - u) * em * 3;
+        var depth = (Math.sin(th) + 1) / 2;
+        var sc = u * (.72 + .5 * depth) * c[3];
+        el.style.transform = "translate(-50%,-50%) translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) rotate(" + (c[4] + 14 * Math.sin(spin * 1.3 + i * 2)).toFixed(1) + "deg) scale(" + sc.toFixed(3) + ")";
+        el.style.zIndex = depth > .5 ? 6 : 4;
+        el.style.pointerEvents = u > .7 && !el.hasAttribute("aria-hidden") ? "auto" : "none";
+      });
+      motes.forEach(function (m, i) {
+        var ph = (t * .09 + i / motes.length) % 1;
+        var x = Math.sin(ph * 6.28 + i * 1.7) * R.x * .45 * (.4 + ph);
+        var y = -em * 5 - ph * R.y * 3.4;
+        var s = .5 + (i % 3) * .3 + ph * .3;
+        m.style.transform = "translate(-50%,-50%) translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) scale(" + s.toFixed(2) + ")";
+        m.style.opacity = (Math.sin(Math.PI * ph) * .9 * (1 - u * .35)).toFixed(2);
+      });
+      var o1 = reduce ? 1 : 1 - clamp((p - .1) / .18), o2 = reduce ? 0 : clamp((p - .46) / .16);
+      t1.style.opacity = o1; t1.style.transform = "translateY(" + (-p * 70).toFixed(1) + "px)"; t1.style.visibility = o1 < .02 ? "hidden" : "visible";
+      t2.style.opacity = o2; t2.style.transform = "translateY(" + ((1 - o2) * 30).toFixed(1) + "px)"; t2.style.visibility = o2 < .02 ? "hidden" : "visible";
+      hint.style.opacity = 1 - clamp(p / .08);
+    }
+    function frame(ts) {
+      raf = 0;
+      var dt = Math.min(.05, (ts - last) / 1000 || .016); last = ts;
+      var r = hero.getBoundingClientRect(), hb = head.getBoundingClientRect().bottom;
+      tgt = reduce ? .5 : clamp((hb - r.top) / range);
+      P += (tgt - P) * Math.min(1, dt * 7);
+      px += (pxT - px) * Math.min(1, dt * 4);
+      paint(P, ts / 1000);
+      if (active && !reduce) raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }
+    size(); root.classList.add("js-hero"); paint(0, 0);
+    window.addEventListener("resize", function () { size(); kick(); });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { active = es[0].isIntersecting; if (active) kick(); }, { rootMargin: "100px" }).observe(hero);
+    } else { active = true; }
+    if (reduce) { P = .5; kick(); } else { kick(); }
+    pin.addEventListener("pointermove", function (e) { if (e.pointerType === "mouse") pxT = (e.clientX / window.innerWidth - .5) * 2; });
+    $("#boxHit").addEventListener("click", function () {
+      var r = hero.getBoundingClientRect(), hb = head.getBoundingClientRect().bottom;
+      var base = window.scrollY + r.top - hb, to = tgt > .3 ? base : base + range * .58;
+      window.scrollTo({ top: to, behavior: reduce ? "auto" : "smooth" });
+    });
+    sprites.forEach(function (s) { s.addEventListener("click", function () { burst(s); }); });
+  })();
 
   render();
 })();
