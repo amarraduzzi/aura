@@ -342,6 +342,20 @@ html[lang="ar"] .stk.a { font-style: normal; font-weight: 700; font-size: 1.3rem
 
 [hidden]{display:none!important}
 img{max-width:100%}
+/* mobile hero: compact text, box sized to the room left under it (placement is finished in JS) */
+@media (max-width: 599px) {
+  .t1, .t2 { padding-top: 1.1rem; }
+  .t1 h1 { font-size: clamp(2.5rem, 10.8vw, 3.4rem); margin-top: .7rem; }
+  .t1 .sub { margin-top: .9rem; }
+  .t1 .actions, .t2 .actions { margin-top: 1.1rem; }
+  .t2 h2 { font-size: clamp(2.2rem, 9.6vw, 3rem); line-height: 1; }
+  .t2 .lines { margin-top: .7rem; gap: 0; font-size: .95rem; line-height: 1.45; text-shadow: 0 0 10px var(--rose), 0 0 18px var(--rose); }
+  .t2 .actions .link { display: none; }
+  .t1 .btn, .t2 .btn { min-height: 50px; padding: 0 1.5rem; }
+  .anc { left: calc(50% + 4vw); --sp: clamp(64px, 17.5vw, 110px); }
+  .boxwrap { font-size: clamp(8px, 2.6vw, 14px); }
+  .rings3 { opacity: .6; }
+}
 </style>
 </head>
 <body>
@@ -789,6 +803,7 @@ img{max-width:100%}
   }
   function setLang(l) {
     lang = l; render();
+    window.dispatchEvent(new Event("resize"));
     try { localStorage.setItem("aura-lang", l); } catch (e) {}
   }
   try { var s = localStorage.getItem("aura-lang"); if (s && T[s]) lang = s; } catch (e) {}
@@ -929,14 +944,25 @@ img{max-width:100%}
       [200, 1.00, 1.00, 1.00, -10], [335, 1.05, .95, 1.00, 8], [22, .82, 1.12, .88, -6], [152, .86, 1.05, .84, 7],
       [268, .55, 1.25, .62, 0], [92, 1.18, .72, .72, 0], [238, 1.32, .86, .9, 12], [58, 1.25, .92, .85, -12], [312, .45, 1.2, .8, 8]
     ];
-    var W, H, em, R, range, desk, P = 0, tgt = 0, last = 0, raf = 0, active = false, pxT = 0, px = 0;
+    var W, H, em, R, range, span, desk, small, anc = $(".anc"), P = 0, tgt = 0, last = 0, raf = 0, active = false, pxT = 0, px = 0;
     function clamp(x, a, b) { return Math.max(a || 0, Math.min(b == null ? 1 : b, x)); }
     function ease(x) { return 1 - Math.pow(1 - x, 3); }
     function size() {
-      W = pin.clientWidth; H = pin.clientHeight; desk = W >= 900;
+      W = pin.clientWidth; H = pin.clientHeight; desk = W >= 900; small = W < 600;
       em = parseFloat(getComputedStyle(bw).fontSize) || 14;
-      R = { x: W * (desk ? .25 : .4), y: H * (desk ? .3 : .16) };
+      R = { x: W * (desk ? .25 : small ? .28 : .4), y: H * (desk ? .3 : small ? .13 : .16) };
       range = Math.max(1, hero.offsetHeight - H);
+      span = range * .88; /* progress hits 1 before the pin lets go, so the finished scene holds still */
+      place();
+    }
+    /* phones: put the box in the room left under the text, whatever the language or screen height */
+    function place() {
+      if (!small) { anc.style.top = ""; return; }
+      var last = t2.lastElementChild, tb = last.offsetTop + last.offsetHeight;
+      var sp = sprites[0].offsetWidth || 70, spr = R.y * 1.25 + sp * .45;
+      var above = Math.max(19.5 * em + 6, spr), below = Math.max(7 * em, spr);
+      var lo = tb + 14 + above, hi = H - below - 14;
+      anc.style.top = Math.round(lo <= hi ? (lo + hi) / 2 : lo) + "px";
     }
     function paint(p, t) {
       var lid = ease(clamp((p - .06) / .3)), card = ease(clamp((p - .2) / .3)), u = ease(clamp((p - .14) / .36));
@@ -977,7 +1003,7 @@ img{max-width:100%}
       raf = 0;
       var dt = Math.min(.05, (ts - last) / 1000 || .016); last = ts;
       var r = hero.getBoundingClientRect(), hb = head.getBoundingClientRect().bottom;
-      tgt = reduce ? .5 : clamp((hb - r.top) / range);
+      tgt = reduce ? .5 : clamp((hb - r.top) / span);
       P += (tgt - P) * Math.min(1, dt * 7);
       px += (pxT - px) * Math.min(1, dt * 4);
       paint(P, ts / 1000);
@@ -990,10 +1016,11 @@ img{max-width:100%}
       new IntersectionObserver(function (es) { active = es[0].isIntersecting; if (active) kick(); }, { rootMargin: "100px" }).observe(hero);
     } else { active = true; }
     if (reduce) { P = .5; kick(); } else { kick(); }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { size(); kick(); });
     pin.addEventListener("pointermove", function (e) { if (e.pointerType === "mouse") pxT = (e.clientX / window.innerWidth - .5) * 2; });
     $("#boxHit").addEventListener("click", function () {
       var r = hero.getBoundingClientRect(), hb = head.getBoundingClientRect().bottom;
-      var base = window.scrollY + r.top - hb, to = tgt > .3 ? base : base + range * .58;
+      var base = window.scrollY + r.top - hb, to = tgt > .3 ? base : base + span * .58;
       window.scrollTo({ top: to, behavior: reduce ? "auto" : "smooth" });
     });
     sprites.forEach(function (s) { s.addEventListener("click", function () { burst(s); }); });

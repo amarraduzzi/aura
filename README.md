@@ -1,6 +1,6 @@
 # Aura Box
 
-EÃ©n bestand: `index.html` (HTML, CSS, JS en logo inline). Lettertypes via Google Fonts.
+E©n bestand: `index.html` (HTML, CSS, JS en logo inline). Lettertypes via Google Fonts.
 
 GitHub Pages: Settings > Pages > Deploy from a branch > main / (root).
 
