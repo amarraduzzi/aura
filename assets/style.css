@@ -241,3 +241,22 @@ nav a{font-size:20px}
 @media(max-width:700px){.cyc.big{grid-template-columns:1fr 1fr;gap:34px 16px}.cyc.big::before{display:none}}
 main section{overflow-x:clip}
 .phero:has(.arch){padding-bottom:clamp(56px,8vw,96px)}
+
+.mani.about .wrap{grid-template-columns:1fr}
+.mani.about .quote{grid-column:auto;border:0;margin:0;padding:0}
+.mani.about .quote::before{display:none}
+.mani.about .txt{margin-top:32px}
+.usp .more{display:inline-block;margin-top:6px}
+
+/* footer v2 + form room */
+footer{position:relative;overflow:hidden;padding-top:clamp(56px,8vw,96px)}
+footer::before{content:'';position:absolute;width:min(620px,90vw);aspect-ratio:1;inset-inline-end:-14%;top:-30%;border:1px solid rgba(229,138,168,.22);border-radius:50%;pointer-events:none}
+footer .wrap{position:relative}
+.ftop{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap;padding-bottom:clamp(32px,5vw,56px);margin-bottom:clamp(32px,5vw,52px);border-bottom:1px solid rgba(255,255,255,.18)}
+.fbig{font-size:clamp(32px,4.6vw,60px);line-height:1.08;letter-spacing:-.02em;color:var(--cream);max-width:12em;margin:0}
+.fbig em{color:#f4a0ba}
+.fcta{display:grid;gap:12px;justify-items:start}
+.fmail{opacity:.85;font-size:16px}
+.card{max-width:860px;padding:clamp(32px,7vw,80px)}
+.card form{gap:26px}
+.card textarea{min-height:190px}
