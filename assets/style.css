@@ -317,3 +317,7 @@ section{padding-top:48px;padding-bottom:48px}
 .usp>div{padding-top:26px}
 .usp{margin-top:36px;gap:26px}
 }
+
+/* bracelet photo: keep the gold moon in frame */
+.arch img[src*="bracelet.webp"]{object-position:50% 100%}
+.phero .arch img[src*="bracelet.webp"]{aspect-ratio:4/5!important}
