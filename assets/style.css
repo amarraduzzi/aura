@@ -223,3 +223,21 @@ nav a{font-size:20px}
 @media(max-width:800px){.stick{position:static}.stick .arch{max-width:360px}.cyc{grid-template-columns:1fr 1fr}.arch::after{inset-inline-start:-6px}}
 #box,#cycle,#univers{overflow-x:clip}
 #univers .arch img{object-position:50% 0;aspect-ratio:3/4}
+
+/* subpages */
+.phero .arch{max-width:440px;width:100%;margin-inline:auto}
+.phero .arch img{aspect-ratio:4/5}
+.usp.two{grid-template-columns:repeat(2,1fr)}
+.usp.two p{font-size:17px}
+.usp.two h3{font-size:clamp(24px,2.6vw,32px)}
+@media(max-width:700px){.usp.two{grid-template-columns:1fr}}
+.idx.plain li{font:400 clamp(19px,1.8vw,23px)/1.35 var(--serif);color:var(--plum);padding:18px 0}
+.cyc.big{position:relative;grid-template-columns:repeat(4,1fr);gap:20px;margin:44px 0 0}
+.cyc.big::before{content:'';position:absolute;top:36px;left:0;right:0;height:1px;background:var(--rose)}
+.cyc.big li{grid-template-columns:1fr;justify-items:center;text-align:center;row-gap:4px}
+.cyc.big i{grid-row:auto;position:relative;z-index:1;width:72px;height:72px;margin-bottom:14px}
+.cyc.big h3{font-size:clamp(22px,2.2vw,28px);margin:0}
+.cyc.big small{font-size:13px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+@media(max-width:700px){.cyc.big{grid-template-columns:1fr 1fr;gap:34px 16px}.cyc.big::before{display:none}}
+main section{overflow-x:clip}
+.phero:has(.arch){padding-bottom:clamp(56px,8vw,96px)}
