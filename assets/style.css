@@ -307,3 +307,13 @@ h2{font-size:clamp(40px,4.4vw,56px)}
 .mani h2{font-size:clamp(40px,6vw,80px)}
 .prose h2{font-size:clamp(22px,3.2vw,30px)}
 .arch img[src*="bracelet-girl"]{object-position:50% 0}
+
+/* v5: rhythm + footer line + photo framing */
+.fbig em{white-space:nowrap}
+.arch img[src*="maman-fille"]{object-position:50% 0}
+.usp p{max-width:30em}
+@media(max-width:800px){
+section{padding-top:48px;padding-bottom:48px}
+.usp>div{padding-top:26px}
+.usp{margin-top:36px;gap:26px}
+}
