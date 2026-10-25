@@ -153,3 +153,11 @@ nav a{font-size:20px}
 .faq summary::after{content:'+';flex:none;font:400 28px/1 var(--sans);color:var(--pink);transition:transform .25s}
 .faq details[open] summary::after{transform:rotate(45deg)}
 .faq details p{padding:0 0 22px;opacity:.9}
+
+/* prose */
+.prose{max-width:760px}
+.prose h2{font-size:clamp(22px,3.2vw,30px);margin:34px 0 8px}
+.prose h2:first-child{margin-top:0}
+.prose p{margin-bottom:14px}
+.prose .note{margin-top:20px}
+.wrap.prose{margin-inline-start:calc((100% - min(1080px,100% - 40px))/2);margin-inline-end:auto}
