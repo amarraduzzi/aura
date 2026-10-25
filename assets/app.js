@@ -4,16 +4,29 @@ const M=new Map(D.map(r=>[r[0],r]));
 const nodes=[...document.querySelectorAll('header *,main *,footer *')].filter(e=>!e.closest('svg')&&!e.closest('script,style')).map(e=>({e,k:e.innerHTML.trim()})).filter(o=>M.has(o.k));
 const phs=[...document.querySelectorAll('[placeholder]')].map(e=>({e,k:e.getAttribute('placeholder')})).filter(o=>M.has(o.k));
 const store=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}},load=k=>{try{return localStorage.getItem(k)}catch(_){return null}};
+// sélecteur de langue : liste déroulante
+const LBL={fr:'FR',ar:'عربي',en:'EN'};
+const langBox=document.querySelector('.lang');let curBtn=null;
+function closeLang(){if(langBox){langBox.classList.remove('open');curBtn.setAttribute('aria-expanded','false')}}
+if(langBox){
+  const menu=document.createElement('div');menu.className='lang-menu';menu.append(...langBox.querySelectorAll('button'));
+  curBtn=document.createElement('button');curBtn.type='button';curBtn.className='lang-cur';curBtn.textContent='FR';
+  curBtn.setAttribute('aria-haspopup','true');curBtn.setAttribute('aria-expanded','false');curBtn.setAttribute('aria-label','Langue');
+  langBox.append(curBtn,menu);
+  curBtn.addEventListener('click',e=>{e.stopPropagation();const o=langBox.classList.toggle('open');curBtn.setAttribute('aria-expanded',o)});
+  document.addEventListener('click',e=>{if(!langBox.contains(e.target))closeLang()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLang();curBtn.focus()}});
+}
 function setLang(l,save){
   const c=l==='en'?1:2,r=l==='fr';
   document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';
   nodes.forEach(o=>{o.e.innerHTML=r?o.k:M.get(o.k)[c]});
   phs.forEach(o=>o.e.setAttribute('placeholder',r?o.k:M.get(o.k)[c]));
-  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));
+  document.querySelectorAll('.lang-menu button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l));if(curBtn)curBtn.textContent=LBL[l];
   if(save)store('aura-lang',l);
   document.dispatchEvent(new CustomEvent('langchange',{detail:l}));
 }
-document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.l,true)));
+document.querySelectorAll('.lang-menu button').forEach(b=>b.addEventListener('click',()=>{setLang(b.dataset.l,true);closeLang()}));
 const sv=load('aura-lang');if(sv&&sv!=='fr')setLang(sv);
 // menu mobile
 const bg=document.querySelector('.burger'),nav=document.getElementById('nav');
