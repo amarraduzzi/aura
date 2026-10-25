@@ -22,32 +22,61 @@
 </div></header>
 <main id="top">
 
-<section class="hero"><div class="wrap">
-<div class="stage">
-<svg class="orbit" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="49" stroke-dasharray="0.4 2.2"/><circle cx="50" cy="50" r="49"/></svg>
-<svg class="moon" viewBox="0 0 40 40" aria-hidden="true"><path d="M26 4a16 16 0 1 0 0 32 13 13 0 0 1 0-32z" fill="#fff3ec"/><path d="M33 8l1.2 3 3 1.2-3 1.2L33 16.4l-1.2-3-3-1.2 3-1.2z" fill="#e8c77a"/></svg>
-<div class="q q1">Comment en parler à maman ?</div><div class="q q2">Pourquoi mon corps change ?</div><div class="q q3">Est-ce normal d'être stressée ?</div>
-<button class="box" id="boxbtn" aria-label="Ouvrir la box Aura" data-a="Ouvrir la box Aura">
-<svg viewBox="0 0 200 170" width="100%" height="100%" aria-hidden="true">
-<ellipse cx="100" cy="162" rx="84" ry="7" fill="#4a2342" opacity=".13"/>
-<g class="slip"><rect x="46" y="44" width="108" height="60" rx="3" fill="#fff8ef"/><text x="100" y="80" text-anchor="middle" font-family="Caveat" font-size="17" fill="#4a2342">à ton rythme.</text></g>
-<rect x="20" y="76" width="160" height="82" rx="6" fill="#c4527a"/>
-<rect x="20" y="76" width="160" height="10" fill="#fff" opacity=".18"/>
-<text x="100" y="128" text-anchor="middle" font-family="Fraunces" font-weight="600" font-size="40" fill="#fff3ec" letter-spacing="-2">aura</text>
-<text x="100" y="146" text-anchor="middle" font-family="Outfit" font-size="8" fill="#fff3ec" opacity=".8">Grandir en douceur</text>
-<g class="lid"><rect x="14" y="58" width="172" height="22" rx="5" fill="#d9648c"/><rect x="92" y="58" width="16" height="22" fill="#e8c77a"/></g>
-</svg></button>
-</div>
-<p class="hint" id="hint">Touche la box ✦</p>
+<section class="hero"><div class="wrap hgrid">
+<div class="copy">
 <h1>Grandir en douceur, <em>à ton rythme.</em></h1>
 <p class="lead">La première box au Maroc imaginée pour accompagner les adolescentes dans les changements de leur corps, leurs émotions et leurs premières fois.</p>
-<a class="btn" href="#question">Pose ta question</a>
-<span class="free">C'est gratuit, et sans engagement !</span>
+<div class="cta"><a class="btn" href="#question">Pose ta question</a><span class="free">C'est gratuit, et sans engagement !</span></div>
+</div>
+<div class="visual">
+<div class="stage" id="stage">
+<svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+<circle cx="50" cy="50" r="48" class="rl"/>
+<circle cx="50" cy="2" r="2.6" fill="#b3386a"/>
+<g><circle cx="98" cy="50" r="2.6" fill="#4a2342"/><path d="M98 47.4a2.6 2.6 0 0 1 0 5.2z" fill="#fff3ec"/></g>
+<circle cx="50" cy="98" r="2.6" fill="#e8c77a"/>
+<g><circle cx="2" cy="50" r="2.6" fill="#fff3ec" stroke="#4a2342" stroke-width=".5"/><path d="M2 47.4a2.6 2.6 0 0 0 0 5.2z" fill="#4a2342"/></g>
+<g class="orbiter"><path d="M16.500 -1a4.200 4.200 0 1 0 0 8.400 3.300 3.300 0 0 1 0-8.400z" transform="translate(41.500 -1.600) scale(1)" fill="#e8c77a"/></g>
+</svg>
+<button class="box" id="boxbtn" type="button" aria-expanded="false" aria-label="Ouvrir la box Aura">
+<svg viewBox="0 0 400 360" aria-hidden="true">
+<defs>
+<linearGradient id="gF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9648c"/><stop offset="1" stop-color="#c4527a"/></linearGradient>
+<linearGradient id="gS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b04370"/><stop offset="1" stop-color="#8f2f58"/></linearGradient>
+<linearGradient id="gI" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6b2a55"/><stop offset="1" stop-color="#4a2342"/></linearGradient>
+<linearGradient id="gL" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#f4a0ba"/><stop offset="1" stop-color="#e58aa8"/></linearGradient>
+<filter id="bl" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<ellipse cx="200" cy="336" rx="160" ry="13" fill="#4a2342" opacity=".2" filter="url(#bl)"/>
+<path d="M60 190 150 150H340L250 190z" fill="url(#gI)"/>
+<g class="slip"><rect x="104" y="150" width="124" height="74" rx="4" fill="#fff8ef"/><path d="M122 164a8 8 0 1 0 0 16 6.200 6.200 0 0 1 0-16z" fill="#e8c77a"/><rect x="142" y="170" width="70" height="3" rx="1.500" fill="#e58aa8"/><rect x="122" y="190" width="90" height="3" rx="1.500" fill="#f2c6d3"/><rect x="122" y="200" width="64" height="3" rx="1.500" fill="#f2c6d3"/></g>
+<path d="M60 190H250V320H60z" fill="url(#gF)"/>
+<path d="M250 190 340 150V280L250 320z" fill="url(#gS)"/>
+<path d="M60 190 250 320" stroke="#fff3ec" stroke-opacity=".08" stroke-width="1.200"/>
+<path d="M250 190 340 150" stroke="#fff3ec" stroke-opacity=".25"/>
+<image href="assets/logo-cream-mark.png" x="90" y="240" width="130" height="42" preserveAspectRatio="xMidYMid meet"/>
+<g class="lid">
+<path d="M50 176H258V212H50z" fill="#d9648c"/>
+<path d="M258 176 348 134V170L258 212z" fill="#b2476f"/>
+<path d="M50 176 142 134H348L258 176z" fill="url(#gL)"/>
+<path d="M146 176H160L252 134H238z" fill="#e8c77a"/>
+<rect x="146" y="176" width="14" height="36" fill="#e8c77a"/>
+<path d="M258 176 348 134" stroke="#fff3ec" stroke-opacity=".35"/>
+</g>
+<g class="spark" fill="#e8c77a"><path transform="translate(104 96) scale(1.300)" d="M0-7 2-2 7 0 2 2 0 7-2 2-7 0-2-2z"/><path transform="translate(316 78) scale(1)" d="M0-7 2-2 7 0 2 2 0 7-2 2-7 0-2-2z"/><path transform="translate(352 190) scale(.8)" d="M0-7 2-2 7 0 2 2 0 7-2 2-7 0-2-2z"/></g>
+</svg>
+</button>
+<div class="q q1" aria-hidden="true"></div><div class="q q2" aria-hidden="true"></div><div class="q q3" aria-hidden="true"></div>
+</div>
+<p class="hint" id="hint">Touche la box ✦</p>
+</div>
+</div></section>
+
+<section class="strip"><div class="wrap">
 <div class="usp">
 <div><svg viewBox="0 0 24 24"><path d="M16 3a9 9 0 1 0 5 15A7.5 7.5 0 0 1 16 3z"/></svg><h3>Des contenus exclusifs</h3><p>Conseils d'experts, réponses à tes questions.</p></div>
 <div><svg viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.800-8 11-8 11z"/></svg><h3>Une box pensée avec amour</h3><p>Des essentiels pour t'accompagner à chaque étape.</p></div>
 <div><svg viewBox="0 0 24 24"><path d="m12 2 2.9 6.300 6.800.7-5.100 4.600 1.500 6.800L12 17l-6.100 3.400 1.500-6.800L2.300 9l6.800-.7z"/></svg><h3>Une communauté bienveillante</h3><p>Parce que tu n'es pas seule.</p></div>
-</div>
 </div></section>
 
 <section class="mani"><div class="wrap">
