@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Contact — Aura</title>
-<meta name="description" content="Aura, grandir en douceur.">
+<meta name="description" content="Écris à l'équipe Aura : une question, une idée, une collaboration.">
 <meta property="og:title" content="Contact — Aura">
-<meta property="og:description" content="Aura, grandir en douceur.">
+<meta property="og:description" content="Écris à l'équipe Aura : une question, une idée, une collaboration.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c4527a'/%3E%3Cpath d='M20 7a9 9 0 1 0 0 18 7 7 0 0 1 0-18z' fill='%23fff1ea'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Outfit:wght@300;400;500;600&family=Caveat:wght@500&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
@@ -21,9 +21,20 @@
 <button class="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span></button></div>
 </div></header>
 <main id="top">
-<section class="phero"><div class="wrap"><h1>Contact</h1>
-<p class="lead">Cette page arrive bientôt. On y travaille doucement.</p>
-<a class="btn" href="pose-ta-question.html">Pose ta question</a> <a class="more" style="margin-left:18px" href="la-box.html">Découvrir la box</a></div></section>
+<section class="phero"><div class="wrap">
+<h1>Écris-<em>nous.</em></h1>
+<p class="lead">Une question, une idée, une collaboration ? On te répond avec plaisir.</p>
+</div></section>
+<section class="sec-tight"><div class="wrap"><div class="card" id="card">
+<h2>Envoie-nous un <em>message.</em></h2>
+<form data-form novalidate>
+<label><span>Ton prénom (facultatif)</span><input type="text" name="name" autocomplete="given-name"></label>
+<label><span>Ton e-mail</span><input type="email" name="email" autocomplete="email" placeholder="prenom@email.com"></label>
+<label><span>Ton message</span><textarea name="message" maxlength="1000"></textarea></label>
+<button class="btn" type="submit" style="justify-self:start">Envoyer</button>
+</form>
+<p class="ok">Merci ! Ton message est bien arrivé ♥</p>
+</div></div></section>
 </main>
 <footer><div class="wrap">
 <div class="fgrid" style="grid-template-columns:1.5fr 1fr 1fr 1fr">

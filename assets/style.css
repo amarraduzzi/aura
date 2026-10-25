@@ -144,3 +144,12 @@ nav a{font-size:20px}
 .sec-tight{padding-top:0}
 .phase i.mn{background:var(--plum)}
 [dir=rtl] .list li{flex-direction:row}
+
+/* faq */
+.faq{max-width:780px;display:grid;gap:12px}
+.faq details{background:rgba(255,255,255,.6);border-radius:var(--r);padding:0 24px}
+.faq summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;font:400 clamp(19px,2.6vw,23px)/1.25 var(--serif);color:var(--plum)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';flex:none;font:400 28px/1 var(--sans);color:var(--pink);transition:transform .25s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 0 22px;opacity:.9}
