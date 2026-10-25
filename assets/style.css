@@ -68,15 +68,27 @@ nav a:hover{opacity:1}
 .btn:hover{transform:translateY(-2px);box-shadow:0 18px 36px rgba(74,35,66,.34)}
 .free{display:block;margin-top:6px;font:500 21px var(--hand);color:var(--plum)}
 /* usp */
-.usp{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px;text-align:center}
-.usp h3{font-size:21px;margin:8px 0 4px}.usp p{font-size:15px;opacity:.85}
-.usp svg{width:30px;fill:var(--pink)}
-@media(max-width:700px){.usp{grid-template-columns:1fr}}
+.usp{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3.5vw,48px);margin-top:56px}
+.usp>div{position:relative;padding-top:30px;border-top:1px solid rgba(196,82,122,.4)}
+.usp svg{position:absolute;top:-11px;inset-inline-start:0;width:22px;height:22px}
+.usp h3{font-size:clamp(20px,1.8vw,24px);margin:0 0 6px}
+.usp p{font-size:16px;opacity:.85;max-width:24em}
+@media(max-width:700px){.usp{grid-template-columns:1fr;gap:28px}}
 /* manifesto */
-.mani{background:var(--pink);color:#fff;text-align:center}
-.mani h2{color:#fff;font-size:clamp(34px,6vw,64px);max-width:15ch;margin-inline:auto}
-.mani em{color:#ffd9e4}
-.mani p{max-width:36em;margin:0 auto 14px;opacity:.95}
+.mani{position:relative;overflow:hidden;background:var(--plum);color:var(--cream);border-radius:56px 56px 0 0;padding:clamp(72px,10vw,132px) 0}
+.mani::before{content:'';position:absolute;width:min(760px,95vw);aspect-ratio:1;inset-inline-end:-30%;top:78%;transform:translateY(-50%);border:1px solid rgba(229,138,168,.2);border-radius:50%;pointer-events:none}
+.mani .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(28px,6vw,88px);align-items:start}
+.mani h2{text-wrap:balance;color:var(--cream);font-size:clamp(40px,5.6vw,80px);line-height:1.03;letter-spacing:-.02em;max-width:9ch;margin:0}
+.mani em{color:#f4a0ba}
+.mani .txt p{max-width:32em;margin:0 0 18px;font-size:clamp(17px,1.4vw,19px);line-height:1.75;opacity:.92}
+.mani .quote{grid-column:1/-1;position:relative;margin-top:clamp(28px,5vw,64px);padding-top:clamp(32px,4.5vw,56px);border-top:1px solid rgba(255,243,236,.16)}
+.mani .quote::before{content:'';position:absolute;top:-1px;inset-inline-start:0;height:2px;width:72px;background:var(--gold)}
+@supports (animation-timeline:view()){.mani .quote::before{animation:draw linear both;animation-timeline:view();animation-range:entry 25% cover 40%}}
+@keyframes draw{from{width:72px}to{width:100%}}
+.qmoon{width:46px;height:46px;display:block;margin-bottom:18px}
+.mani .quote p{font-size:clamp(28px,4.2vw,58px);line-height:1.15;letter-spacing:-.015em;max-width:21em;margin:0;color:var(--cream)}
+@media(max-width:800px){.mani{border-radius:32px 32px 0 0}.mani .wrap{grid-template-columns:1fr}.mani h2{max-width:11ch}}
+
 /* split */
 .split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,6vw,80px);align-items:center}
 @media(max-width:800px){.split{grid-template-columns:1fr}}
